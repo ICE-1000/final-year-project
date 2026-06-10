@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="login-page bg-im6">
+    <main class="login-shell">
+        <section class="login-panel">
+            <h1>Inventory Management System</h1>
+            <form id="loginForm" class="form-stack">
+                <label>Username <input type="text" id="username" autocomplete="username" required></label>
+                <label>Password <input type="password" id="password" autocomplete="current-password" required></label>
+                <button type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+                <p id="errorMsg" class="error"></p>
+            </form>
+        </section>
+    </main>
+    <script src="js/auth.js"></script>
+</body>
+</html>

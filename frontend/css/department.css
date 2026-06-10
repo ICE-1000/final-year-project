@@ -1,0 +1,8 @@
+@import url("admin.css");
+
+.sidebar { background: #1f2937; }
+.department-note {
+    color: var(--muted);
+    margin-top: -10px;
+    margin-bottom: 20px;
+}

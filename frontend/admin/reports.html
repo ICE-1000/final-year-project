@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-im1">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+            <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
+            <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
+            <a class="active" href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header"><h1>Reports</h1></header>
+        <section class="panel actions">
+            <button id="pdfReport"><i class="fa-solid fa-file-pdf"></i> Inventory PDF</button>
+            <button class="button secondary" id="excelReport"><i class="fa-solid fa-file-excel"></i> Inventory Excel</button>
+        </section>
+    </main>
+</div>
+<script src="../js/api.js"></script>
+<script>
+requireAuth('ADMIN');
+async function downloadReport(path, filename) {
+    const res = await fetch(`${API_BASE}${path}`, { headers: { Authorization: `Bearer ${token()}` } });
+    if (!res.ok) throw new Error('Download failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+document.getElementById('pdfReport').addEventListener('click', () => downloadReport('/reports/inventory.pdf', 'inventory-report.pdf'));
+document.getElementById('excelReport').addEventListener('click', () => downloadReport('/reports/inventory.xlsx', 'inventory-report.xlsx'));
+</script>
+</body>
+</html>

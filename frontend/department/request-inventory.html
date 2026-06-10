@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Inventory</title>
+    <link rel="stylesheet" href="../css/department.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-im3">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-table-columns"></i> Dashboard</a>
+            <a href="my-inventory.html"><i class="fas fa-box"></i> My Inventory</a>
+            <a class="active" href="request-inventory.html"><i class="fas fa-plus-circle"></i> Request Inventory</a>
+            <a href="my-requests.html"><i class="fas fa-list"></i> My Requests</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header"><h1>Request Inventory</h1></header>
+        <section class="panel request-panel">
+            <form id="requestForm" class="form-grid">
+                <div class="form-group">
+                    <label for="itemName">Item Name</label>
+                    <input id="itemName" name="itemName" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input id="quantity" name="quantity" type="number" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="neededBy">Needed By</label>
+                    <input id="neededBy" name="neededBy" type="month" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-actions full-width">
+                    <button type="submit" class="button">Submit Request</button>
+                </div>
+            </form>
+            <div id="message" class="message"></div>
+        </section>
+    </main>
+</div>
+<script src="../js/api.js"></script>
+<script src="../js/department-requests.js"></script>
+</body>
+</html>

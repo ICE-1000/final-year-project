@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Requests</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-im1">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+            <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a href="departments.html"><i class="fas fa-boxes-stacked"></i> Departments</a>
+            <a href="users.html"><i class="fas fa-boxes-stacked"></i> Users</a>
+            <a class="active" href="requests.html"><i class="fas fa-list"></i> Requests</a>
+            <a href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
+            <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header"><h1>Inventory Requests</h1></header>
+        <section class="panel">
+            <div class="form-row">
+                <label for="statusFilter">Filter by Status</label>
+                <select id="statusFilter">
+                    <option value="">All</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="APPROVED">Approved</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+                <button id="filterBtn" class="button">Refresh</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Needed By</th>
+                        <th>Status</th>
+                        <th>Rejection Reason</th>
+                        <th>Requested At</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="requestsRows"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="../js/api.js"></script>
+<script src="../js/admin-requests.js"></script>
+</body>
+</html>

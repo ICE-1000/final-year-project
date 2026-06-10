@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments - IMS Admin</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Additional styles for the department management page */
+        .dept-form-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .dept-form-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ink);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 12px;
+        }
+        .dept-form-title i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+        .dept-table-container {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .dept-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .dept-table th {
+            background: #f8fafc;
+            padding: 14px 16px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--muted);
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+        }
+        .dept-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+        .dept-table tr:last-child td {
+            border-bottom: none;
+        }
+        .dept-table tr:hover {
+            background: #f9fafb;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-delete {
+            color: var(--danger);
+        }
+        .btn-delete:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+        .success-message {
+            background: #e0f2e9;
+            color: #0a5c3e;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        .error-message {
+            background: #fee2e2;
+            color: var(--danger);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+        .code-badge {
+            background: #eef2ff;
+            color: #1e40af;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        @media (max-width: 640px) {
+            .dept-form-card {
+                padding: 16px;
+            }
+            .dept-table th,
+            .dept-table td {
+                padding: 10px 12px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-im1">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+            <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
+            <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a class="active" href="departments.html"><i class="fas fa-building"></i> Departments</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <h1><i class="fas fa-building" style="margin-right: 10px; color: var(--accent);"></i> Department Management</h1>
+        </header>
+
+        <!-- Success/Error Messages -->
+        <div id="successMessage" class="success-message">
+            <i class="fas fa-check-circle"></i> <span id="successText"></span>
+        </div>
+        <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorText"></span>
+        </div>
+
+        <!-- Create Department Form -->
+        <div class="dept-form-card">
+            <div class="dept-form-title">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create New Department</span>
+            </div>
+            <form id="deptForm" class="grid two">
+                <label>
+                    Department Name <span style="color: var(--danger);">*</span>
+                    <input type="text" id="deptName" placeholder="e.g., Information Technology" required autocomplete="off">
+                </label>
+                <label>
+                    Department Code <span style="color: var(--danger);">*</span>
+                    <input type="text" id="deptCode" placeholder="e.g., IT" required autocomplete="off">
+                </label>
+                <div class="actions" style="grid-column: 1/-1; margin-top: 8px;">
+                    <button type="submit" id="createDeptBtn">
+                        <i class="fas fa-save"></i> Create Department
+                    </button>
+                    <button type="button" id="clearFormBtn" class="button secondary">
+                        <i class="fas fa-eraser"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Departments List -->
+        <div class="dept-table-container">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--line); background: #fafcfc;">
+                <i class="fas fa-list-ul"></i> <strong>All Departments</strong>
+                <span id="deptCount" style="float: right; font-size: 13px; color: var(--muted);"></span>
+            </div>
+            <div id="departmentsList">
+                <!-- Loading indicator -->
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-pulse"></i> Loading departments...
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+    // Ensure only ADMIN can access this page
+    requireAuth('ADMIN');
+
+    // DOM Elements
+    const deptForm = document.getElementById('deptForm');
+    const deptName = document.getElementById('deptName');
+    const deptCode = document.getElementById('deptCode');
+    const clearFormBtn = document.getElementById('clearFormBtn');
+    const departmentsList = document.getElementById('departmentsList');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const successText = document.getElementById('successText');
+    const errorText = document.getElementById('errorText');
+    const deptCountSpan = document.getElementById('deptCount');
+
+    // Helper: Show success message (auto-hide after 3 seconds)
+    function showSuccess(msg) {
+        successText.textContent = msg;
+        successMessage.style.display = 'flex';
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 3000);
+    }
+
+    // Helper: Show error message
+    function showError(msg) {
+        errorText.textContent = msg;
+        errorMessage.style.display = 'flex';
+        setTimeout(() => {
+            errorMessage.style.display = 'none';
+        }, 4000);
+    }
+
+    // Helper: Hide messages
+    function hideMessages() {
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+    }
+
+    // Load all departments and render table
+    async function loadDepartments() {
+        try {
+            departmentsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i> Loading departments...</div>';
+            const departments = await api('/departments');
+            
+            if (!departments || departments.length === 0) {
+                departmentsList.innerHTML = '<div class="empty-state"><i class="fas fa-building" style="font-size: 40px; margin-bottom: 12px; display: block;"></i>No departments found. Create your first department above!</div>';
+                deptCountSpan.textContent = '0 departments';
+                return;
+            }
+
+            // Build table HTML
+            const tableHTML = `
+                <table class="dept-table">
+                    <thead>
+                        <tr>
+                            <th width="40%">Department Name</th>
+                            <th width="25%">Department Code</th>
+                            <th width="15%">Created Date</th>
+                            <th width="20%">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${departments.map(dept => `
+                            <tr data-dept-id="${dept.id}">
+                                <td><strong>${escapeHtml(dept.departmentName)}</strong></td>
+                                <td><span class="code-badge">${escapeHtml(dept.departmentCode)}</span></td>
+                                <td>${dept.createdAt ? new Date(dept.createdAt).toLocaleDateString() : '-'}</td>
+                                <td class="action-buttons">
+                                    <button class="btn-icon btn-delete" data-delete="${dept.id}" title="Delete Department">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            departmentsList.innerHTML = tableHTML;
+            deptCountSpan.textContent = `${departments.length} department${departments.length !== 1 ? 's' : ''}`;
+
+            // Attach delete event listeners
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const deptId = btn.getAttribute('data-delete');
+                    const deptName = btn.closest('tr').querySelector('td:first-child strong').textContent;
+                    if (confirm(`Are you sure you want to delete department "${deptName}"? This action cannot be undone.`)) {
+                        await deleteDepartment(deptId);
+                    }
+                });
+            });
+        } catch (err) {
+            console.error('Error loading departments:', err);
+            departmentsList.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 12px; display: block; color: var(--danger);"></i>Failed to load departments: ${err.message}</div>`;
+            showError('Failed to load departments: ' + err.message);
+        }
+    }
+
+    // Delete a department
+    async function deleteDepartment(deptId) {
+        try {
+            await api(`/departments/${deptId}`, { method: 'DELETE' });
+            showSuccess('Department deleted successfully');
+            await loadDepartments(); // Refresh the list
+        } catch (err) {
+            console.error('Error deleting department:', err);
+            showError('Failed to delete department: ' + (err.message || 'Unknown error'));
+            await loadDepartments(); // Still refresh to show updated state
+        }
+    }
+
+    // Create a new department
+    async function createDepartment(event) {
+        event.preventDefault();
+        hideMessages();
+
+        const name = deptName.value.trim();
+        const code = deptCode.value.trim();
+
+        if (!name || !code) {
+            showError('Please provide both department name and code');
+            return;
+        }
+
+        // Code should be uppercase and without spaces
+        const formattedCode = code.toUpperCase().replace(/\s+/g, '');
+        if (formattedCode !== code) {
+            deptCode.value = formattedCode;
+        }
+
+        try {
+            const response = await api('/departments', {
+                method: 'POST',
+                body: JSON.stringify({
+                    departmentName: name,
+                    departmentCode: formattedCode
+                })
+            });
+            
+            showSuccess(`Department "${response.departmentName}" created successfully!`);
+            deptForm.reset();
+            await loadDepartments();
+        } catch (err) {
+            console.error('Error creating department:', err);
+            let errorMsg = err.message || 'Failed to create department';
+            if (errorMsg.includes('duplicate') || errorMsg.includes('unique')) {
+                errorMsg = 'Department code already exists. Please use a unique code.';
+            }
+            showError(errorMsg);
+        }
+    }
+
+    // Helper function to escape HTML to prevent XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // Clear form
+    clearFormBtn.addEventListener('click', () => {
+        deptForm.reset();
+        hideMessages();
+    });
+
+    // Form submission
+    deptForm.addEventListener('submit', createDepartment);
+
+    // Initialize page
+    loadDepartments();
+</script>
+</body>
+</html>

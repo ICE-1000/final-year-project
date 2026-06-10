@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Inventory Requests</title>
+    <link rel="stylesheet" href="../css/department.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-im3">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-table-columns"></i> Dashboard</a>
+            <a href="my-inventory.html"><i class="fas fa-box"></i> My Inventory</a>
+            <a href="request-inventory.html"><i class="fas fa-plus-circle"></i> Request Inventory</a>
+            <a class="active" href="my-requests.html"><i class="fas fa-list"></i> My Requests</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header"><h1>My Requests</h1></header>
+        <section class="panel">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Needed By</th>
+                        <th>Status</th>
+                        <th>Rejection Reason</th>
+                        <th>Requested At</th>
+                    </tr>
+                    </thead>
+                    <tbody id="requestsRows"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="../js/api.js"></script>
+<script src="../js/department-requests.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-im1">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a class="active" href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+            <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
+            <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Inventory</h1>
+            <button id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        </header>
+        <section class="panel">
+            <form id="inventoryForm" class="grid two">
+                <input type="hidden" id="itemId">
+                <label>Barcode <input id="barcode" required></label>
+                <label>Name <input id="inventoryName" required></label>
+                <label>Category <input id="category"></label>
+                <label>Quantity <input id="quantity" type="number" min="0" required></label>
+                <label>Serial Number <input id="serialNumber"></label>
+                <label>Condition <input id="condition"></label>
+                <label class="grid" style="grid-column:1/-1">Description <textarea id="description"></textarea></label>
+                <div class="actions"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Item</button><button type="button" id="clearBtn" class="button secondary">Clear</button></div>
+            </form>
+        </section>
+        <br>
+        <div class="table-wrap"><table><thead><tr><th>Barcode</th><th>Name</th><th>Category</th><th>Qty</th><th>Available</th><th>Allocated</th><th>Status</th><th>Actions</th></tr></thead><tbody id="inventoryRows"></tbody></table></div>
+    </main>
+</div>
+<script src="../js/api.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
