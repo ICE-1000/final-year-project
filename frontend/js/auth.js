@@ -1,11 +1,12 @@
 const LOGIN_API_BASE = (() => {
+    const trim = (s) => s ? s.replace(/\/+$/g, '') : s;
     const configuredBase = localStorage.getItem('apiBase');
-    if (configuredBase) return configuredBase;
+    if (configuredBase) return trim(configuredBase);
     // Keep localhost for local development. For non-local use the deployed backend URL.
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         return 'http://localhost:8080/api';
     }
-    return ' https://final-year-project-oref.onrender.com/api';
+    return 'https://final-year-project-oref.onrender.com/api';
 })();
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {

@@ -24,7 +24,7 @@ The backend uses `spring.jpa.hibernate.ddl-auto=update`, so tables are created a
 
 ## Frontend
 
-Open `frontend/index.html` in a browser, or serve the folder with any static server. For non-localhost usage the frontend defaults to the deployed backend `https://the-inventory-management-system-ni8e.onrender.com/api`; for local development the default remains `http://localhost:8080/api`. Override it in the browser console with:
+Open `frontend/index.html` in a browser, or serve the folder with any static server. For non-localhost usage the frontend defaults to the deployed backend `https://final-year-project-oref.onrender.com/api`; for local development the default remains `http://localhost:8080/api`. Override it in the browser console with:
 
 ```javascript
 localStorage.setItem('apiBase', 'https://your-backend.example.com/api')
