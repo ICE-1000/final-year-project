@@ -5,6 +5,23 @@
     display: grid;
     grid-template-columns: 260px 1fr;
 }
+.mobile-menu-btn {
+    display: none; /* shown by JS <=900px */
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    z-index: 1200;
+    background: var(--accent);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.2);
+}
+.mobile-menu-btn:focus { outline: 2px solid rgba(255,255,255,0.6); }
 .sidebar {
     background: #162033;
     color: white;
@@ -61,12 +78,54 @@
     overflow: hidden;
     color: white;
 }
+/* Sidebar visible state for small screens */
+.sidebar.collapsed { transform: translateX(-110%); transition: transform 240ms ease-in-out; }
+.sidebar.open { transform: translateX(0%); transition: transform 240ms ease-in-out; position: fixed; left: 0; top: 0; z-index: 1100; height: 100vh; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1050; }
+.sidebar-overlay.visible { display: block; }
+
+/* Touch-target helper (ensures minimum hit area) */
+.touch-target, button.touch-target, .button.touch-target { min-height: 44px; min-width: 44px; padding: 10px 12px; }
+
+/* Responsive utilities */
+.hide-desktop { display: none; }
+.show-desktop { display: initial; }
+
 @media (max-width: 900px) {
     .app-layout { grid-template-columns: 1fr; }
-    .sidebar { position: static; height: auto; }
+    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 260px; transform: translateX(-110%); transition: transform 240ms ease-in-out; }
+    .sidebar { padding: 18px; }
     .stats-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mobile-menu-btn { display: inline-flex; }
+    .hide-mobile { display: none; }
+    .show-mobile { display: initial; }
+    .sidebar-overlay { display: block; }
 }
 @media (max-width: 560px) {
     .stats-cards { grid-template-columns: 1fr; }
     .main-content { padding: 18px; }
 }
+
+/* Responsive cards: 4 -> 2 -> 1 */
+@media (max-width: 1200px) {
+    .stats-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+    .stats-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+    .stats-cards { grid-template-columns: 1fr; }
+}
+
+/* Tables: horizontal scroll on small screens */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 760px) { table { min-width: 680px; } }
+
+/* Form input font-size bump on mobile to prevent iOS zoom */
+@media (max-width: 560px) {
+    input, select, textarea { font-size: 16px; }
+}
+
+/* Utility spacing for compact sidebar on small screens */
+.sidebar .logo { font-size: 20px; }
+

@@ -107,6 +107,23 @@ body.bg-im6 { background-image: url("../images/im6.png"); }
     background: rgba(255,255,255,0.74);
 }
 
+/* Login logo container (slot above h1) */
+.login-logo { display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+.login-logo .logo-image { display: block; width: 180px; height: 80px; object-fit: contain; }
+/* responsive sizes */
+@media (max-width: 900px) {
+    .login-logo .logo-image { width: 140px; height: 60px; }
+}
+@media (max-width: 560px) {
+    .login-logo .logo-image { width: 120px; height: 50px; }
+}
+
+/* Ensure buttons meet touch target on mobile */
+@media (max-width: 900px) {
+    button, .button { min-height: 44px; padding: 10px 14px; }
+}
+
+
 /* For a stronger glass effect on supported browsers (optional) */
 .panel, .card, .login-panel {
     -webkit-backdrop-filter: saturate(110%) blur(4px);

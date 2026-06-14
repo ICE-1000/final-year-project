@@ -86,3 +86,116 @@ async function updateRequestStatus(id, status, rejectionReason) {
         body: JSON.stringify({ status, rejectionReason })
     });
 }
+
+/* Responsive sidebar & touch improvements
+   - Creates hamburger button <=900px
+   - Toggles sidebar open/close and overlay
+   - Closes sidebar on nav link click, Escape key, or overlay click
+   - Resets state on resize
+   - Adds touch-target class to buttons on small screens
+*/
+function initResponsiveSidebar() {
+    if (typeof document === 'undefined') return;
+    const SIDEBAR_BREAKPOINT = 900;
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return; // nothing to do if no sidebar on page
+
+    let overlay = document.querySelector('.sidebar-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    let btn = document.querySelector('.mobile-menu-btn');
+    if (!btn) {
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'mobile-menu-btn';
+        btn.setAttribute('aria-label', 'Open menu');
+        btn.innerHTML = '\u2630'; // simple hamburger ☰
+        document.body.appendChild(btn);
+    }
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebar.classList.remove('collapsed');
+        overlay.classList.add('visible');
+        btn.setAttribute('aria-expanded', 'true');
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebar.classList.add('collapsed');
+        overlay.classList.remove('visible');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
+    });
+
+    overlay.addEventListener('click', () => closeSidebar());
+
+    // Close when a sidebar nav link is clicked
+    function attachNavLinkHandlers() {
+        const links = sidebar.querySelectorAll('a');
+        links.forEach(l => l.addEventListener('click', () => {
+            if (window.innerWidth <= SIDEBAR_BREAKPOINT) closeSidebar();
+        }));
+    }
+    attachNavLinkHandlers();
+
+    // Close on Escape
+    document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' || ev.key === 'Esc') {
+            if (sidebar.classList.contains('open')) closeSidebar();
+        }
+    });
+
+    // Improve touch targets for buttons on small screens
+    function updateTouchTargets() {
+        const buttons = Array.from(document.querySelectorAll('button, .button'));
+        if (window.innerWidth <= SIDEBAR_BREAKPOINT) {
+            buttons.forEach(b => b.classList.add('touch-target'));
+        } else {
+            buttons.forEach(b => b.classList.remove('touch-target'));
+        }
+    }
+
+    // Reset on resize to keep desktop layout stable
+    let resizeTimer;
+    function onResize() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            updateTouchTargets();
+            if (window.innerWidth > SIDEBAR_BREAKPOINT) {
+                // ensure sidebar visible and overlay hidden on desktop
+                sidebar.classList.remove('open');
+                sidebar.classList.remove('collapsed');
+                overlay.classList.remove('visible');
+                btn.style.display = '';
+            } else {
+                // ensure collapsed by default on mobile
+                if (!sidebar.classList.contains('open')) sidebar.classList.add('collapsed');
+            }
+        }, 120);
+    }
+
+    window.addEventListener('resize', onResize);
+
+    // initial state
+    if (window.innerWidth <= SIDEBAR_BREAKPOINT) {
+        sidebar.classList.add('collapsed');
+        btn.style.display = 'inline-flex';
+    } else {
+        sidebar.classList.remove('collapsed');
+        btn.style.display = '';
+    }
+    updateTouchTargets();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initResponsiveSidebar);
+} else {
+    initResponsiveSidebar();
+}

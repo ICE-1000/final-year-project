@@ -6,3 +6,13 @@
     margin-top: -10px;
     margin-bottom: 20px;
 }
+
+/* Department specific responsive tweaks */
+@media (max-width: 900px) {
+    /* Slightly reduce padding for department pages */
+    .main-content { padding: 14px; }
+    .department-note { margin-bottom: 16px; }
+}
+
+/* Ensure department tables scroll nicely */
+.department-table .table-wrap { overflow-x: auto; }
