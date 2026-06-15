@@ -1,0 +1,6 @@
+[2026-06-15T16:34:31.720Z] [INIT] Deep Copilot debug log started. file=c:\Users\hp\OneDrive\Desktop\final\final-year-project\.deep-copilot\logs\session-2026-06-15T16-34-31-720Z.log
+[2026-06-15T16:34:31.720Z] [ACTIVATE] {"version":"0.43.1"}
+[2026-06-15T16:34:31.722Z] [PROVIDERS_LOADED] {"count":4,"ids":["anthropic","custom","deepseek","openai"]}
+[2026-06-15T16:34:31.723Z] [TERMINAL_MONITOR_STARTED] {}
+[2026-06-15T16:34:31.723Z] [STATUSBAR_REGISTERED] {"id":"deepseekAgent.statusBar"}
+[2026-06-15T16:34:31.731Z] [INLINE_COMPLETION_REGISTERED]

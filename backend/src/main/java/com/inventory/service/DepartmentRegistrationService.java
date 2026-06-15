@@ -33,26 +33,35 @@ public class DepartmentRegistrationService {
 
     @Transactional
     public void register(RegisterDepartmentRequest request) {
-        if (registrationRepository.existsByDepartmentCode(request.getDepartmentCode())) {
+        // Normalize inputs to avoid case-sensitivity issues in uniqueness checks
+        final String deptCode = request.getDepartmentCode() == null ? null : request.getDepartmentCode().trim().toUpperCase();
+        final String username = request.getUsername() == null ? null : request.getUsername().trim();
+        final String email = request.getEmail() == null ? null : request.getEmail().trim().toLowerCase();
+
+        if (deptCode == null || deptCode.isEmpty()) {
+            throw new BadRequestException("Department code is required");
+        }
+
+        if (registrationRepository.existsByDepartmentCode(deptCode)) {
             throw new BadRequestException("Department code already registered (pending or approved)");
         }
-        if (departmentRepository.findByDepartmentCode(request.getDepartmentCode()).isPresent()) {
+        if (departmentRepository.findByDepartmentCode(deptCode).isPresent()) {
             throw new BadRequestException("Department code already exists");
         }
-        if (registrationRepository.existsByUsername(request.getUsername()) ||
-            userRepository.existsByUsernameAndDeletedFalse(request.getUsername())) {
+        if (registrationRepository.existsByUsername(username) ||
+            userRepository.existsByUsernameAndDeletedFalse(username)) {
             throw new BadRequestException("Username already taken");
         }
-        if (registrationRepository.existsByEmail(request.getEmail()) ||
-            userRepository.existsByEmailAndDeletedFalse(request.getEmail())) {
+        if (registrationRepository.existsByEmail(email) ||
+            userRepository.existsByEmailAndDeletedFalse(email)) {
             throw new BadRequestException("Email already used");
         }
 
         DepartmentRegistration reg = new DepartmentRegistration();
         reg.setDepartmentName(request.getDepartmentName());
-        reg.setDepartmentCode(request.getDepartmentCode().toUpperCase());
-        reg.setUsername(request.getUsername());
-        reg.setEmail(request.getEmail());
+        reg.setDepartmentCode(deptCode);
+        reg.setUsername(username);
+        reg.setEmail(email);
         reg.setPassword(passwordEncoder.encode(request.getPassword()));
         reg.setStatus(RegistrationStatus.PENDING);
         registrationRepository.save(reg);
@@ -71,13 +80,14 @@ public class DepartmentRegistrationService {
         if (reg.getStatus() != RegistrationStatus.PENDING) {
             throw new BadRequestException("Registration already processed");
         }
-        if (departmentRepository.findByDepartmentCode(reg.getDepartmentCode()).isPresent()) {
+        final String regDeptCode = reg.getDepartmentCode() == null ? null : reg.getDepartmentCode().trim().toUpperCase();
+        if (departmentRepository.findByDepartmentCode(regDeptCode).isPresent()) {
             throw new BadRequestException("Department code already exists");
         }
 
         Department department = new Department();
         department.setDepartmentName(reg.getDepartmentName());
-        department.setDepartmentCode(reg.getDepartmentCode());
+        department.setDepartmentCode(regDeptCode);
         departmentRepository.save(department);
 
         User user = new User();

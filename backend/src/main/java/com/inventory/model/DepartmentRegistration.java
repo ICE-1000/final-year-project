@@ -57,7 +57,3 @@ public class DepartmentRegistration {
     public String getRejectionReason() { return rejectionReason; }
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 }
-
-enum RegistrationStatus {
-    PENDING, APPROVED, REJECTED
-}
