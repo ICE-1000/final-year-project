@@ -60,4 +60,15 @@ CREATE TABLE IF NOT EXISTS reports (
     generated_at TIMESTAMP DEFAULT NOW(),
     file_url TEXT
 );
+CREATE TABLE department_registrations (
+    id UUID PRIMARY KEY,
+    department_name VARCHAR(255) NOT NULL,
+    department_code VARCHAR(100) NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    rejection_reason TEXT,
+    created_at TIMESTAMP
+);
 

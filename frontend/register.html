@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Registration</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="login-page bg-im6">
+    <div class="login-shell">
+        <div class="login-panel">
+            <div class="login-logo">
+                <img class="logo-image" src="images/logo.png" alt="Logo">
+            </div>
+            <h1>Register Your Department</h1>
+            <form id="deptRegisterForm" class="form-stack">
+                <label>Department Name <input type="text" id="deptName" required></label>
+                <label>Department Code <input type="text" id="deptCode" placeholder="e.g., IT, HR" required></label>
+                <label>Admin Username <input type="text" id="username" required></label>
+                <label>Admin Email <input type="email" id="email" required></label>
+                <label>Password <input type="password" id="password" required></label>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Submit Registration</button>
+                <p id="message" class="error"></p>
+            </form>
+            <p>Already registered? <a href="index.html">Back to login</a></p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = (() => {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:8080/api';
+            }
+            return 'https://final-year-project-oref.onrender.com/api';
+        })();
+
+        document.getElementById('deptRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                departmentName: document.getElementById('deptName').value.trim(),
+                departmentCode: document.getElementById('deptCode').value.trim(),
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value
+            };
+            const message = document.getElementById('message');
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/department/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || 'Registration failed');
+                }
+
+                message.style.color = 'green';
+                message.textContent = 'request submitted waiting for admin approval';
+                document.getElementById('deptRegisterForm').reset();
+            } catch (err) {
+                message.style.color = 'red';
+                message.textContent = err.message;
+            }
+        });
+    </script>
+</body>
+</html>
