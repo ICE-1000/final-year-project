@@ -29,7 +29,7 @@ public class ReportController {
     // Admin: full system inventory report across all departments.
     @GetMapping("/inventory.pdf")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<byte[]> inventoryPdf() {
+    public ResponseEntity<byte[]> inventoryPdf() throws IOException {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=inventory-report.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
@@ -50,7 +50,7 @@ public class ReportController {
     // if it doesn't match their own. An ADMIN may pass departmentId to pull any department's report.
     @GetMapping("/department.pdf")
     @PreAuthorize("hasRole('DEPARTMENT') or hasRole('ADMIN')")
-    public ResponseEntity<byte[]> departmentPdf(@RequestParam(required = false) UUID departmentId) {
+    public ResponseEntity<byte[]> departmentPdf(@RequestParam(required = false) UUID departmentId) throws IOException {
         User currentUser = userService.getCurrentUser();
         byte[] report = reportService.departmentReportPdf(currentUser, departmentId);
         return ResponseEntity.ok()

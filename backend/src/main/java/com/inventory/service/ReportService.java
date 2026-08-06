@@ -32,7 +32,7 @@ public class ReportService {
     }
 
     // Admin: full system inventory report (all items across all departments).
-    public byte[] inventoryPdf() {
+    public byte[] inventoryPdf() throws IOException {
         return pdfService.generateInventoryReport(inventoryService.findAll());
     }
 
@@ -44,7 +44,7 @@ public class ReportService {
     // A DEPARTMENT user always gets their own department, regardless of what (if anything)
     // they pass in departmentId - there is no way to request another department's data.
     // An ADMIN may pull any department's report by passing its id explicitly.
-    public byte[] departmentReportPdf(User currentUser, UUID requestedDepartmentId) {
+    public byte[] departmentReportPdf(User currentUser, UUID requestedDepartmentId) throws IOException {
         UUID departmentId = resolveDepartmentId(currentUser, requestedDepartmentId);
         Department department = departmentService.get(departmentId);
         List<AllocationDTO> allocations = allocationService.findByDepartment(departmentId);

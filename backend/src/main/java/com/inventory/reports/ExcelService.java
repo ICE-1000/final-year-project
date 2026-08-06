@@ -35,7 +35,7 @@ public class ExcelService {
                 Row row = sheet.createRow(i + 1);
                 row.createCell(0).setCellValue(safe(item.getBarcode()));
                 row.createCell(1).setCellValue(safe(item.getInventoryName()));
-                row.createCell(2).setCellValue(safe(item.getCategory()));
+                row.createCell(2).setCellValue(safe(item.getCategoryName()));
                 row.createCell(3).setCellValue(item.getQuantity());
                 row.createCell(4).setCellValue(item.getAvailableQuantity());
                 row.createCell(5).setCellValue(item.getAllocatedQuantity());
