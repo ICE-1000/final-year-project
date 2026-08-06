@@ -5,6 +5,7 @@ import com.inventory.dto.InventoryStatsDTO;
 import com.inventory.service.InventoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,17 +43,27 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryService.findByBarcode(barcode));
     }
 
+    // Lets a department (or admin) see what's currently available in a category -
+    // name, remaining quantity, and specs - before deciding what to request.
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<InventoryDTO>> byCategory(@PathVariable UUID categoryId) {
+        return ResponseEntity.ok(inventoryService.findByCategory(categoryId));
+    }
+
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<InventoryDTO> create(@Valid @RequestBody InventoryDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(inventoryService.create(dto));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<InventoryDTO> update(@PathVariable UUID id, @Valid @RequestBody InventoryDTO dto) {
         return ResponseEntity.ok(inventoryService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         inventoryService.softDelete(id);
         return ResponseEntity.noContent().build();

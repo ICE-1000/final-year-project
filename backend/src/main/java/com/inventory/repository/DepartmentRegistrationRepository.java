@@ -1,4 +1,3 @@
-// com/inventory/repository/DepartmentRegistrationRepository.java
 package com.inventory.repository;
 
 import com.inventory.model.DepartmentRegistration;

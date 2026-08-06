@@ -2,15 +2,16 @@ package com.inventory.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class RegisterDepartmentRequest {
     @NotBlank private String departmentName;
     @NotBlank private String departmentCode;
     @NotBlank private String username;
     @Email @NotBlank private String email;
-    @NotBlank private String password;
+    @NotBlank @Size(min = 8, max = 100, message = "Password must be at least 8 characters")
+    private String password;
 
-    // getters & setters
     public String getDepartmentName() { return departmentName; }
     public void setDepartmentName(String departmentName) { this.departmentName = departmentName; }
     public String getDepartmentCode() { return departmentCode; }

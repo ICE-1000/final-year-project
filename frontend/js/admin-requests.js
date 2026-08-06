@@ -21,11 +21,12 @@ async function loadAdminRequests() {
     const status = statusFilter ? statusFilter.value : '';
     let requests;
     try {
-        tbody.innerHTML = '<tr><td colspan="8">Loading requests...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9">Loading requests...</td></tr>';
         requests = await fetchAllRequests(status);
         renderRows(tbody, requests, request => `
             <tr>
                 <td>${escapeHtml(request.departmentName)}</td>
+                <td>${escapeHtml(request.categoryName || '-')}</td>
                 <td>${escapeHtml(request.itemName)}</td>
                 <td>${request.quantity}</td>
                 <td>${formatMonth(request.neededBy)}</td>
@@ -39,14 +40,13 @@ async function loadAdminRequests() {
                     ` : ''}
                 </td>
             </tr>
-        `, 8);
+        `, 9);
     } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="8">${escapeHtml(error.message || 'Failed to load requests.')}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9">${escapeHtml(error.message || 'Failed to load requests.')}</td></tr>`;
         console.error(error);
         return;
     }
 
-    // Attach event listeners for approve/reject buttons
     tbody.querySelectorAll('button[data-action]').forEach(button => {
         button.addEventListener('click', async () => {
             const id = button.dataset.id;
@@ -60,7 +60,6 @@ async function loadAdminRequests() {
                     if (!reason || !reason.trim()) return;
                     await updateRequestStatus(id, 'REJECTED', reason.trim());
                 }
-                // Refresh the list after action
                 await loadAdminRequests();
             } catch (error) {
                 alert(error.message || 'Action failed.');
@@ -71,7 +70,6 @@ async function loadAdminRequests() {
     });
 }
 
-// Initialise admin request page
 async function initAdminRequests() {
     const filterBtn = document.getElementById('filterBtn');
     if (filterBtn) {

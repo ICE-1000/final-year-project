@@ -12,6 +12,8 @@ public class AllocationDTO {
     private int quantity;
     private String status;
     private LocalDateTime allocatedAt;
+    private String allocationBarcode;
+    private String allocationBarcodeImageUrl;
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
@@ -29,4 +31,8 @@ public class AllocationDTO {
     public void setStatus(String status) { this.status = status; }
     public LocalDateTime getAllocatedAt() { return allocatedAt; }
     public void setAllocatedAt(LocalDateTime allocatedAt) { this.allocatedAt = allocatedAt; }
+    public String getAllocationBarcode() { return allocationBarcode; }
+    public void setAllocationBarcode(String allocationBarcode) { this.allocationBarcode = allocationBarcode; }
+    public String getAllocationBarcodeImageUrl() { return allocationBarcodeImageUrl; }
+    public void setAllocationBarcodeImageUrl(String allocationBarcodeImageUrl) { this.allocationBarcodeImageUrl = allocationBarcodeImageUrl; }
 }

@@ -5,8 +5,12 @@ import com.inventory.model.Role;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
+// NOTE: this DTO carries an explicit role, which is why /api/auth/register
+// is now restricted to callers already authenticated as ADMIN (see SecurityConfig).
+// It must never be reachable by an unauthenticated caller.
 public class RegisterRequest {
     @NotBlank
     private String username;
@@ -14,6 +18,7 @@ public class RegisterRequest {
     @NotBlank
     private String email;
     @NotBlank
+    @Size(min = 8, max = 100, message = "Password must be at least 8 characters")
     private String password;
     @NotNull
     private Role role;

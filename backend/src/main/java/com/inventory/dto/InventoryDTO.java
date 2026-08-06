@@ -2,16 +2,29 @@ package com.inventory.dto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class InventoryDTO {
     private UUID id;
-    @NotBlank
+
+    // Optional on create: the system auto-assigns a unique barcode when this is left blank.
+    @Pattern(regexp = "^$|^[A-Z0-9\\-]{3,100}$", message = "Barcode must be 3-100 characters: A-Z, 0-9, or hyphen")
     private String barcode;
+
     @NotBlank
     private String inventoryName;
-    private String category;
+
+    // Required: every item must belong to one of the categories an admin has created
+    // (see CategoryController). categoryName is read-only, populated from the
+    // relation for display - the client never sets it directly.
+    @NotNull(message = "Category is required")
+    private UUID categoryId;
+    private String categoryName;
+    private String categoryCode;
+
     private String description;
     @Min(0)
     private int quantity;
@@ -29,8 +42,12 @@ public class InventoryDTO {
     public void setBarcode(String barcode) { this.barcode = barcode; }
     public String getInventoryName() { return inventoryName; }
     public void setInventoryName(String inventoryName) { this.inventoryName = inventoryName; }
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public UUID getCategoryId() { return categoryId; }
+    public void setCategoryId(UUID categoryId) { this.categoryId = categoryId; }
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public String getCategoryCode() { return categoryCode; }
+    public void setCategoryCode(String categoryCode) { this.categoryCode = categoryCode; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public int getQuantity() { return quantity; }

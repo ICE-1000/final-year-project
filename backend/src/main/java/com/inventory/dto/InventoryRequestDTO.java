@@ -10,6 +10,8 @@ public class InventoryRequestDTO {
     private UUID id;
     private UUID departmentId;
     private String departmentName;
+    private UUID categoryId;
+    private String categoryName;
     private String itemName;
     private Integer quantity;
     private LocalDate neededBy;
@@ -24,6 +26,10 @@ public class InventoryRequestDTO {
     public void setDepartmentId(UUID departmentId) { this.departmentId = departmentId; }
     public String getDepartmentName() { return departmentName; }
     public void setDepartmentName(String departmentName) { this.departmentName = departmentName; }
+    public UUID getCategoryId() { return categoryId; }
+    public void setCategoryId(UUID categoryId) { this.categoryId = categoryId; }
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
     public Integer getQuantity() { return quantity; }

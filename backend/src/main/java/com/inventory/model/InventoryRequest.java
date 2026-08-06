@@ -30,6 +30,10 @@ public class InventoryRequest {
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Column(name = "item_name", nullable = false)
     private String itemName;
 
@@ -65,6 +69,8 @@ public class InventoryRequest {
     public void setId(UUID id) { this.id = id; }
     public Department getDepartment() { return department; }
     public void setDepartment(Department department) { this.department = department; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
     public Integer getQuantity() { return quantity; }

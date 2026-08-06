@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+    private static final int MIN_PASSWORD_LENGTH = 8;
+
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
@@ -32,6 +34,9 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Only reachable via /api/auth/register, which SecurityConfig now restricts to an
+    // already-authenticated ADMIN caller - the client-supplied role can be trusted here
+    // precisely because that gate exists.
     @Transactional
     public User register(RegisterRequest request) {
         if (userRepository.existsByUsernameAndDeletedFalse(request.getUsername())) {
@@ -88,6 +93,9 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            if (request.getPassword().length() < MIN_PASSWORD_LENGTH) {
+                throw new BadRequestException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters");
+            }
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
         user.setRole(request.getRole());
@@ -110,19 +118,6 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setDeleted(true);
         userRepository.save(user);
-    }
-
-    public List<UserDTO> findAll() {
-        return findAllUsers();
-    }
-    
-
-    public UserDTO update(UUID id, UserUpdateRequest request) {
-        return updateUser(id, request);
-    }
-
-    public void delete(UUID id) {
-        deleteUser(id);
     }
 
     private UserDTO toDto(User user) {

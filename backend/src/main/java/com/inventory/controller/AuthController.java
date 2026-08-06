@@ -50,6 +50,8 @@ public class AuthController {
         ));
     }
 
+    // Restricted to ADMIN callers only - see SecurityConfig. This DTO carries an explicit
+    // Role, so it must never be reachable by an unauthenticated request.
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         User user = userService.register(request);

@@ -15,6 +15,7 @@
             <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
             <a href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
             <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a href="categories.html"><i class="fas fa-tags"></i> Categories</a>
             <a class="active" href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
             <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
             <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
@@ -23,10 +24,21 @@
     </aside>
     <main class="main-content">
         <header class="page-header"><h1>Scan Barcode</h1></header>
-        <section class="panel">
-            <div id="scanner-container" class="scanner"></div>
-            <h2 id="scanResult"></h2>
-            <pre id="scanItem" class="panel"></pre>
+        <section class="panel" id="scanPanel">
+            <!--
+              Works two ways at once:
+              - A USB/Bluetooth hardware scanner "types" into this input and
+                sends Enter automatically - no extra setup needed.
+              - Staff without a scanner can click "Use Camera" instead.
+            -->
+            <div class="actions">
+                <input id="manualBarcode" placeholder="Scan or type a barcode, then press Enter" autocomplete="off">
+                <button type="button" id="lookupBtn"><i class="fa-solid fa-magnifying-glass"></i> Look Up</button>
+                <button type="button" id="toggleCameraBtn"><i class="fa-solid fa-camera"></i> Use Camera</button>
+            </div>
+            <div id="scanner-container" class="scanner" style="display:none; margin-top:16px;"></div>
+            <h2 id="scanResult" style="margin-top:16px;"></h2>
+            <div id="scanItem"></div>
         </section>
     </main>
 </div>

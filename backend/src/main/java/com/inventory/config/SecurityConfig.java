@@ -5,6 +5,7 @@ import com.inventory.security.JwtAuthenticationFilter;
 import com.inventory.security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -39,7 +40,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**", "/api/barcode/image/**", "/api/auth/department/register").permitAll()
+                // Public: login, department self-registration (goes through a pending-approval
+                // workflow with no client-controlled role), and barcode label images (embedded
+                // in <img> tags without an Authorization header).
+                .antMatchers("/api/auth/login", "/api/auth/department/register", "/api/barcode/image/**").permitAll()
+                // /api/auth/register accepts an explicit Role from the client, so it must only
+                // ever be reachable by a caller already authenticated as ADMIN. Previously this
+                // was folded into a blanket "/api/auth/**".permitAll(), which let anyone self-register
+                // as ADMIN - that hole is closed here.
+                .antMatchers(HttpMethod.POST, "/api/auth/register").hasRole("ADMIN")
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/department/**").hasRole("DEPARTMENT")
                 .antMatchers("/api/**").authenticated()

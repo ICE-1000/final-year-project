@@ -2,7 +2,10 @@ package com.inventory.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -35,7 +38,21 @@ public class Allocation {
     private User allocatedBy;
 
     private LocalDateTime allocatedAt = LocalDateTime.now();
-    private String status = "PENDING";
+
+    @Enumerated(EnumType.STRING)
+    private AllocationStatus status = AllocationStatus.PENDING;
+
+    // Composite, printable barcode identifying this specific allocation:
+    // {year}-{categoryCode}-{inventoryBarcode}-{departmentCode}-{uniqueSuffix}.
+    // The trailing suffix exists purely to guarantee uniqueness if the same item
+    // is ever allocated to the same department more than once in the same year -
+    // without it, those two allocations would produce an identical code and
+    // scanning either one would be ambiguous about which allocation it means.
+    @Column(name = "allocation_barcode", unique = true, length = 150)
+    private String allocationBarcode;
+
+    @Column(name = "allocation_barcode_image_url", columnDefinition = "TEXT")
+    private String allocationBarcodeImageUrl;
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
@@ -49,6 +66,10 @@ public class Allocation {
     public void setAllocatedBy(User allocatedBy) { this.allocatedBy = allocatedBy; }
     public LocalDateTime getAllocatedAt() { return allocatedAt; }
     public void setAllocatedAt(LocalDateTime allocatedAt) { this.allocatedAt = allocatedAt; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public AllocationStatus getStatus() { return status; }
+    public void setStatus(AllocationStatus status) { this.status = status; }
+    public String getAllocationBarcode() { return allocationBarcode; }
+    public void setAllocationBarcode(String allocationBarcode) { this.allocationBarcode = allocationBarcode; }
+    public String getAllocationBarcodeImageUrl() { return allocationBarcodeImageUrl; }
+    public void setAllocationBarcodeImageUrl(String allocationBarcodeImageUrl) { this.allocationBarcodeImageUrl = allocationBarcodeImageUrl; }
 }

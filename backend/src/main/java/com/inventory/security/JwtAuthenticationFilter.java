@@ -25,17 +25,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = getJwtFromRequest(request);
-        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-            String username = tokenProvider.getUsernameFromToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            String token = getJwtFromRequest(request);
+            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+                String username = tokenProvider.getUsernameFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            // A token can be structurally valid but reference a user who no longer exists
+            // (e.g. soft-deleted after the token was issued). Rather than letting that
+            // exception escape the filter chain as a raw error page, clear any partial
+            // authentication and let the request continue as unauthenticated - the normal
+            // authorization rules further down will produce a clean 401/403 instead.
+            SecurityContextHolder.clearContext();
         }
         filterChain.doFilter(request, response);
     }

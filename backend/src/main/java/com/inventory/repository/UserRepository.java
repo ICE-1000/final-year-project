@@ -14,11 +14,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     // Fetch only active (not deleted) users
     List<User> findByDeletedFalse();
 
-    // Authentication – exclude deleted users
+    // Authentication - exclude deleted users
     @Query("SELECT u FROM User u WHERE u.username = :username AND u.deleted = false")
     Optional<User> findByUsername(@Param("username") String username);
 
-    // For UserDetailsService – also exclude deleted
+    // For UserDetailsService - also exclude deleted
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.department WHERE u.username = :username AND u.deleted = false")
     Optional<User> findByUsernameWithDepartment(@Param("username") String username);
 
@@ -31,4 +31,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByEmailAndDeletedFalse(String email);
     boolean existsByUsernameAndIdNotAndDeletedFalse(String username, UUID id);
     boolean existsByEmailAndIdNotAndDeletedFalse(String email, UUID id);
+
+    // Used when deleting a department, to make sure no active users still belong to it.
+    boolean existsByDepartmentIdAndDeletedFalse(UUID departmentId);
 }

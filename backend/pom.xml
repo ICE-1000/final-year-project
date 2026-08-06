@@ -47,10 +47,27 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--
+          Upgraded from the single jjwt 0.9.1 artifact (2016, unmaintained, deprecated API)
+          to the current jjwt-api/impl/jackson 0.11.x line. JwtTokenProvider was updated to
+          match: Jwts.parserBuilder()/Keys.hmacShaKeyFor() instead of the old static-secret API.
+        -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>

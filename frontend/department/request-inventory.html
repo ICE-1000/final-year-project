@@ -24,6 +24,25 @@
         <header class="page-header"><h1>Request Inventory</h1></header>
         <section class="panel request-panel">
             <form id="requestForm" class="form-grid">
+                <div class="form-group full-width">
+                    <label for="categorySelect">Category</label>
+                    <select id="categorySelect" required>
+                        <option value="">Select a category...</option>
+                    </select>
+                </div>
+
+                <!-- Filled in as soon as a category is picked, so the department can see
+                     what's already in stock before deciding what to request. -->
+                <div class="form-group full-width" id="availabilityPanel" style="display:none;">
+                    <label>Currently available in this category</label>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Item</th><th>Available</th><th>Condition</th><th>Description</th></tr></thead>
+                            <tbody id="availabilityRows"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="itemName">Item Name</label>
                     <input id="itemName" name="itemName" type="text" required>

@@ -6,9 +6,11 @@ import com.inventory.dto.UpdateRequestStatusDTO;
 import com.inventory.exception.BadRequestException;
 import com.inventory.exception.InvalidRequestStatusTransitionException;
 import com.inventory.exception.ResourceNotFoundException;
+import com.inventory.model.Category;
 import com.inventory.model.InventoryRequest;
 import com.inventory.model.RequestStatus;
 import com.inventory.model.User;
+import com.inventory.repository.CategoryRepository;
 import com.inventory.repository.InventoryRequestRepository;
 import com.inventory.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,13 @@ import java.util.stream.Collectors;
 public class InventoryRequestService {
     private final InventoryRequestRepository requestRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
-    public InventoryRequestService(InventoryRequestRepository requestRepository, UserRepository userRepository) {
+    public InventoryRequestService(InventoryRequestRepository requestRepository, UserRepository userRepository,
+                                    CategoryRepository categoryRepository) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional
@@ -39,8 +44,12 @@ public class InventoryRequestService {
         if (dto.getQuantity() == null || dto.getQuantity() < 1) {
             throw new BadRequestException("Quantity must be at least 1");
         }
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+
         InventoryRequest request = new InventoryRequest();
         request.setDepartment(userWithDept.getDepartment());
+        request.setCategory(category);
         request.setItemName(dto.getItemName());
         request.setQuantity(dto.getQuantity());
         request.setNeededBy(dto.getNeededBy());
@@ -101,6 +110,10 @@ public class InventoryRequestService {
         dto.setId(request.getId());
         dto.setDepartmentId(request.getDepartment() != null ? request.getDepartment().getId() : null);
         dto.setDepartmentName(request.getDepartment() != null ? request.getDepartment().getDepartmentName() : null);
+        if (request.getCategory() != null) {
+            dto.setCategoryId(request.getCategory().getId());
+            dto.setCategoryName(request.getCategory().getName());
+        }
         dto.setItemName(request.getItemName());
         dto.setQuantity(request.getQuantity());
         dto.setNeededBy(request.getNeededBy());

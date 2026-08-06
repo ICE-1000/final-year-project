@@ -1,11 +1,18 @@
 package com.inventory.dto;
 
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class CreateRequestDTO {
+    // Required: the department picks a category first (and can see what's currently
+    // available in it via GET /api/inventory/category/{categoryId}) before submitting.
+    @NotNull(message = "Category is required")
+    private UUID categoryId;
+
     @NotBlank
     private String itemName;
 
@@ -14,10 +21,13 @@ public class CreateRequestDTO {
     private Integer quantity;
 
     @NotNull
+    @FutureOrPresent(message = "Needed-by date cannot be in the past")
     private LocalDate neededBy;
 
     private String description;
 
+    public UUID getCategoryId() { return categoryId; }
+    public void setCategoryId(UUID categoryId) { this.categoryId = categoryId; }
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
     public Integer getQuantity() { return quantity; }

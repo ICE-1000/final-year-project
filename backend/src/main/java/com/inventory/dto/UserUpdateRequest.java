@@ -13,7 +13,12 @@ public class UserUpdateRequest {
     @Email
     @NotBlank
     private String email;
+
+    // Optional: blank/null means "leave password unchanged".
+    // Minimum-length is enforced in UserService when a new value is actually supplied,
+    // since a Bean Validation @Size would reject the legitimate "no change" case.
     private String password;
+
     @NotNull
     private Role role;
     private UUID departmentId;

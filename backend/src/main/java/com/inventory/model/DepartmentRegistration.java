@@ -37,7 +37,6 @@ public class DepartmentRegistration {
 
     private String rejectionReason;
 
-    // Getters and setters (or use Lombok)
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public String getDepartmentName() { return departmentName; }

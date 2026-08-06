@@ -4,9 +4,15 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -24,7 +30,9 @@ public class Inventory {
     @Column(name = "inventory_name", nullable = false)
     private String inventoryName;
 
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -44,7 +52,9 @@ public class Inventory {
     @Column(name = "condition")
     private String condition;
 
-    private String status = "AVAILABLE";
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private InventoryStatus status = InventoryStatus.AVAILABLE;
 
     @Column(name = "barcode_image_url", columnDefinition = "TEXT")
     private String barcodeImageUrl;
@@ -54,14 +64,19 @@ public class Inventory {
 
     private boolean deleted = false;
 
+    // Optimistic locking: protects against two concurrent allocations/updates
+    // over-committing the same item's available/allocated quantities.
+    @Version
+    private Long version;
+
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public String getBarcode() { return barcode; }
     public void setBarcode(String barcode) { this.barcode = barcode; }
     public String getInventoryName() { return inventoryName; }
     public void setInventoryName(String inventoryName) { this.inventoryName = inventoryName; }
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public int getQuantity() { return quantity; }
@@ -74,12 +89,14 @@ public class Inventory {
     public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
     public String getCondition() { return condition; }
     public void setCondition(String condition) { this.condition = condition; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public InventoryStatus getStatus() { return status; }
+    public void setStatus(InventoryStatus status) { this.status = status; }
     public String getBarcodeImageUrl() { return barcodeImageUrl; }
     public void setBarcodeImageUrl(String barcodeImageUrl) { this.barcodeImageUrl = barcodeImageUrl; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public boolean isDeleted() { return deleted; }
     public void setDeleted(boolean deleted) { this.deleted = deleted; }
+    public Long getVersion() { return version; }
+    public void setVersion(Long version) { this.version = version; }
 }

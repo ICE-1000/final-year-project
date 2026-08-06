@@ -1,4 +1,3 @@
-// com/inventory/service/DepartmentRegistrationService.java
 package com.inventory.service;
 
 import com.inventory.dto.RegisterDepartmentRequest;
@@ -33,7 +32,6 @@ public class DepartmentRegistrationService {
 
     @Transactional
     public void register(RegisterDepartmentRequest request) {
-        // Normalize inputs to avoid case-sensitivity issues in uniqueness checks
         final String deptCode = request.getDepartmentCode() == null ? null : request.getDepartmentCode().trim().toUpperCase();
         final String username = request.getUsername() == null ? null : request.getUsername().trim();
         final String email = request.getEmail() == null ? null : request.getEmail().trim().toLowerCase();

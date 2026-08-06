@@ -14,9 +14,14 @@ public interface InventoryRequestRepository extends JpaRepository<InventoryReque
     @Query("SELECT r FROM InventoryRequest r JOIN FETCH r.department WHERE r.department.id = :departmentId ORDER BY r.createdAt DESC")
     List<InventoryRequest> findByDepartmentIdWithDepartment(@Param("departmentId") UUID departmentId);
 
-    // Keep original for other uses if needed
     List<InventoryRequest> findByDepartmentIdOrderByCreatedAtDesc(UUID departmentId);
 
     List<InventoryRequest> findAllByOrderByCreatedAtDesc();
     List<InventoryRequest> findByStatusOrderByCreatedAtDesc(RequestStatus status);
+
+    // Used when deleting a department, to preserve request history integrity.
+    boolean existsByDepartmentId(UUID departmentId);
+
+    // Used when deleting a category, to preserve request history integrity.
+    boolean existsByCategoryId(UUID categoryId);
 }

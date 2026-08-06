@@ -14,8 +14,6 @@ public class UserDTO {
     private String status;
     private LocalDateTime createdAt;
 
-    // No 'status' field – remove from frontend if needed, or add later
-
     public UserDTO() {}
 
     public UUID getId() { return id; }

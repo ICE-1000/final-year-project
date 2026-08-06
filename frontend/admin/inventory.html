@@ -15,6 +15,7 @@
             <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
             <a class="active" href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
             <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a href="categories.html"><i class="fas fa-tags"></i> Categories</a>
             <a href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
             <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
             <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
@@ -29,9 +30,19 @@
         <section class="panel">
             <form id="inventoryForm" class="grid two">
                 <input type="hidden" id="itemId">
-                <label>Barcode <input id="barcode" required></label>
+                <label>
+                    Barcode
+                    <input id="barcode" placeholder="Leave blank to auto-generate">
+                    <small class="muted">Assigned automatically if left blank; cannot be changed once an item is saved.</small>
+                </label>
+                <label>
+                    Category <span style="color: var(--danger);">*</span>
+                    <select id="categorySelect" required>
+                        <option value="">Select a category...</option>
+                    </select>
+                    <small class="muted">Don't see the right one? <a href="categories.html">Add a category</a> first.</small>
+                </label>
                 <label>Name <input id="inventoryName" required></label>
-                <label>Category <input id="category"></label>
                 <label>Quantity <input id="quantity" type="number" min="0" required></label>
                 <label>Serial Number <input id="serialNumber"></label>
                 <label>Condition <input id="condition"></label>
