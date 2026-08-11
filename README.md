@@ -10,12 +10,13 @@ mvn clean package
 mvn spring-boot:run
 ```
 
-Set these environment variables for Supabase/PostgreSQL:
+Set these environment variables for PostgreSQL (Supabase or other):
 
 ```text
-SUPABASE_DB_URL=jdbc:postgresql://host:5432/postgres?sslmode=require
-SUPABASE_DB_USER=...
-SUPABASE_DB_PASSWORD=...
+DB_URL=jdbc:postgresql://host:5432/postgres?sslmode=require
+DB_USERNAME=...
+DB_PASSWORD=...
+DB_POOL_SIZE=5            # optional, defaults to 5
 JWT_SECRET=replace-with-a-long-random-secret
 PORT=8080
 ```
