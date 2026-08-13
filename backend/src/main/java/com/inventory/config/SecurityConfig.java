@@ -44,6 +44,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // workflow with no client-controlled role), and barcode label images (embedded
                 // in <img> tags without an Authorization header).
                 .antMatchers("/api/auth/login", "/api/auth/department/register", "/api/barcode/image/**").permitAll()
+                // FIX: Allow public GET access to categories and departments used in frontend
+                // dropdowns. This permits unauthenticated GET requests for these resources,
+                // while write operations remain protected by method-level security
+                // (e.g. @PreAuthorize("hasRole('ADMIN')") on controller methods).
+                .antMatchers(HttpMethod.GET, "/api/categories", "/api/categories/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/departments").permitAll()
                 // /api/auth/register accepts an explicit Role from the client, so it must only
                 // ever be reachable by a caller already authenticated as ADMIN. Previously this
                 // was folded into a blanket "/api/auth/**".permitAll(), which let anyone self-register
