@@ -41,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // Public: login, department self-registration (goes through a pending-approval
-                // workflow with no client-controlled role), and barcode label images (embedded
-                // in <img> tags without an Authorization header).
+                    // workflow with no client-controlled role), and barcode label images (embedded
+                    // in <img> tags without an Authorization header).
                 .antMatchers("/api/auth/login", "/api/auth/department/register", "/api/barcode/image/**").permitAll()
                 // FIX: Allow public GET access to categories and departments used in frontend
                 // dropdowns. This permits unauthenticated GET requests for these resources,
