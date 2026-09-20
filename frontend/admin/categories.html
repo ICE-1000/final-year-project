@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - IMS Admin</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        .cat-form-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .cat-form-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ink);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 12px;
+        }
+        .cat-form-title i { color: var(--accent); font-size: 20px; }
+        .cat-table-container {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .cat-table { width: 100%; border-collapse: collapse; }
+        .cat-table th {
+            background: #f8fafc; padding: 14px 16px; font-weight: 600; font-size: 13px;
+            color: var(--muted); text-align: left; border-bottom: 1px solid var(--line);
+        }
+        .cat-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+        .cat-table tr:last-child td { border-bottom: none; }
+        .cat-table tr:hover { background: #f9fafb; }
+        .btn-icon {
+            background: none; border: none; cursor: pointer; padding: 6px; border-radius: 6px;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .btn-delete { color: var(--danger); }
+        .btn-delete:hover { background: #fee2e2; color: #b91c1c; }
+        .empty-state { text-align: center; padding: 40px; color: var(--muted); }
+        .success-message, .error-message {
+            padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: none;
+            align-items: center; gap: 10px;
+        }
+        .success-message { background: #e0f2e9; color: #0a5c3e; }
+        .error-message { background: #fee2e2; color: var(--danger); }
+        .loading-spinner { text-align: center; padding: 40px; color: var(--muted); }
+        .code-badge {
+            background: #eef2ff; color: #1e40af; padding: 4px 8px; border-radius: 6px;
+            font-family: monospace; font-size: 12px; font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-im1">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+            <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a class="active" href="categories.html"><i class="fas fa-tags"></i> Categories</a>
+            <a href="departments.html"><i class="fas fa-building"></i> Departments</a>
+            <a href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
+            <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <h1><i class="fas fa-tags" style="margin-right: 10px; color: var(--accent);"></i> Category Management</h1>
+        </header>
+
+        <div id="successMessage" class="success-message"><i class="fas fa-check-circle"></i> <span id="successText"></span></div>
+        <div id="errorMessage" class="error-message"><i class="fas fa-exclamation-circle"></i> <span id="errorText"></span></div>
+
+        <div class="cat-form-card">
+            <div class="cat-form-title"><i class="fas fa-plus-circle"></i><span>Add New Category</span></div>
+            <form id="catForm" class="grid two">
+                <label>
+                    Name <span style="color: var(--danger);">*</span>
+                    <input type="text" id="catName" placeholder="e.g., Electronics" required autocomplete="off">
+                </label>
+                <label>
+                    Code <span style="color: var(--danger);">*</span>
+                    <input type="text" id="catCode" placeholder="e.g., ELEC (2-10 letters/numbers)" required autocomplete="off" maxlength="10">
+                    <small class="muted">Used as the prefix for every barcode in this category - can't be changed later.</small>
+                </label>
+                <label class="grid" style="grid-column:1/-1">
+                    Description
+                    <input type="text" id="catDescription" placeholder="Optional short description" autocomplete="off">
+                </label>
+                <div class="actions" style="grid-column: 1/-1; margin-top: 8px;">
+                    <button type="submit"><i class="fas fa-save"></i> Add Category</button>
+                    <button type="button" id="clearFormBtn" class="button secondary"><i class="fas fa-eraser"></i> Clear</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="cat-table-container">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--line); background: #fafcfc;">
+                <i class="fas fa-list-ul"></i> <strong>All Categories</strong>
+                <span id="catCount" style="float: right; font-size: 13px; color: var(--muted);"></span>
+            </div>
+            <div id="categoriesList">
+                <div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i> Loading categories...</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+    requireAuth('ADMIN');
+
+    const catForm = document.getElementById('catForm');
+    const catName = document.getElementById('catName');
+    const catCode = document.getElementById('catCode');
+    const catDescription = document.getElementById('catDescription');
+    const clearFormBtn = document.getElementById('clearFormBtn');
+    const categoriesList = document.getElementById('categoriesList');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const successText = document.getElementById('successText');
+    const errorText = document.getElementById('errorText');
+    const catCountSpan = document.getElementById('catCount');
+
+    function showSuccess(msg) {
+        successText.textContent = msg;
+        successMessage.style.display = 'flex';
+        setTimeout(() => { successMessage.style.display = 'none'; }, 3000);
+    }
+    function showError(msg) {
+        errorText.textContent = msg;
+        errorMessage.style.display = 'flex';
+        setTimeout(() => { errorMessage.style.display = 'none'; }, 4000);
+    }
+    function hideMessages() {
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+    }
+
+    async function loadCategories() {
+        try {
+            categoriesList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i> Loading categories...</div>';
+            const categories = await api('/categories');
+
+            if (!categories || categories.length === 0) {
+                categoriesList.innerHTML = '<div class="empty-state"><i class="fas fa-tags" style="font-size: 40px; margin-bottom: 12px; display: block;"></i>No categories yet. Add your first one above.</div>';
+                catCountSpan.textContent = '0 categories';
+                return;
+            }
+
+            categoriesList.innerHTML = `
+                <table class="cat-table">
+                    <thead>
+                        <tr><th width="20%">Name</th><th width="12%">Code</th><th width="38%">Description</th><th width="15%">Created</th><th width="15%">Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        ${categories.map(cat => `
+                            <tr data-cat-id="${cat.id}">
+                                <td><strong>${escapeHtml(cat.name)}</strong></td>
+                                <td><span class="code-badge">${escapeHtml(cat.code)}</span></td>
+                                <td>${escapeHtml(cat.description || '-')}</td>
+                                <td>${cat.createdAt ? new Date(cat.createdAt).toLocaleDateString() : '-'}</td>
+                                <td>
+                                    <button class="btn-icon btn-delete" data-delete="${cat.id}" title="Delete Category">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            catCountSpan.textContent = `${categories.length} categor${categories.length !== 1 ? 'ies' : 'y'}`;
+
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const name = btn.closest('tr').querySelector('td:first-child strong').textContent;
+                    if (confirm(`Delete category "${name}"? This only works if no inventory or requests use it.`)) {
+                        try {
+                            await api(`/categories/${btn.getAttribute('data-delete')}`, { method: 'DELETE' });
+                            showSuccess('Category deleted');
+                            await loadCategories();
+                        } catch (err) {
+                            showError(err.message || 'Failed to delete category');
+                        }
+                    }
+                });
+            });
+        } catch (err) {
+            categoriesList.innerHTML = `<div class="empty-state">Failed to load categories: ${escapeHtml(err.message)}</div>`;
+            showError('Failed to load categories: ' + err.message);
+        }
+    }
+
+    catForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessages();
+        const name = catName.value.trim();
+        const code = catCode.value.trim().toUpperCase();
+        if (!name) { showError('Category name is required'); return; }
+        if (!code) { showError('Category code is required'); return; }
+        try {
+            const created = await api('/categories', {
+                method: 'POST',
+                body: JSON.stringify({ name, code, description: catDescription.value.trim() })
+            });
+            showSuccess(`Category "${created.name}" (${created.code}) added`);
+            catForm.reset();
+            await loadCategories();
+        } catch (err) {
+            showError(err.message || 'Failed to add category');
+        }
+    });
+
+    clearFormBtn.addEventListener('click', () => { catForm.reset(); hideMessages(); });
+
+    loadCategories();
+</script>
+</body>
+</html>

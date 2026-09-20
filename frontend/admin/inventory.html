@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-im1">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a class="active" href="inventory.html"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+            <a href="allocation.html"><i class="fas fa-share-nodes"></i> Allocation</a>
+            <a href="categories.html"><i class="fas fa-tags"></i> Categories</a>
+            <a href="scan.html"><i class="fas fa-camera"></i> Scan Barcode</a>
+            <a href="barcode-generator.html"><i class="fas fa-barcode"></i> Barcode</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Inventory</h1>
+            <button id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        </header>
+        <section class="panel">
+            <form id="inventoryForm" class="grid two">
+                <input type="hidden" id="itemId">
+                <label>
+                    Barcode
+                    <input id="barcode" placeholder="Leave blank to auto-generate">
+                    <small class="muted">Assigned automatically if left blank; cannot be changed once an item is saved. Ignored when adding stock to an existing item (its barcode is reused).</small>
+                </label>
+                <label>
+                    Category <span style="color: var(--danger);">*</span>
+                    <select id="categorySelect" required>
+                        <option value="">Select a category...</option>
+                    </select>
+                    <small class="muted">Don't see the right one? <a href="categories.html">Add a category</a> first.</small>
+                </label>
+                <label>Name <input id="inventoryName" required></label>
+                <label>Brand <input id="brand" placeholder="e.g., HP, Samsung (optional)"></label>
+                <label>Specification <input id="specification" placeholder="e.g., 500GB SSD, Size 42 (optional)"></label>
+                <label>
+                    <span id="quantityLabel">Quantity to Register</span>
+                    <input id="quantity" type="number" min="0" required>
+                    <small class="muted" id="quantityHelp">Registering the same name + brand + specification again in this category adds to this item's existing stock instead of creating a duplicate - each unit gets its own individually numbered barcode, continuing from where the last batch left off.</small>
+                </label>
+                <label>Serial Number / Batch Ref <input id="serialNumber"></label>
+                <label>Condition <input id="condition"></label>
+                <label class="grid" style="grid-column:1/-1">Description <textarea id="description"></textarea></label>
+                <div class="actions"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Item</button><button type="button" id="clearBtn" class="button secondary">Clear</button></div>
+            </form>
+        </section>
+        <br>
+        <div class="table-wrap"><table><thead><tr><th>Base Code</th><th>Name</th><th>Brand</th><th>Specification</th><th>Category</th><th>Qty</th><th>Available</th><th>Allocated</th><th>Status</th><th>Actions</th></tr></thead><tbody id="inventoryRows"></tbody></table></div>
+    </main>
+</div>
+<script src="../js/api.js"></script>
+<script src="../js/units.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

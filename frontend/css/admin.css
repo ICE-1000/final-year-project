@@ -1,0 +1,127 @@
+@import url("style.css");
+
+.app-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+}
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    z-index: 1200;
+    background: var(--accent);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.2);
+}
+.mobile-menu-btn:focus { outline: 2px solid rgba(255,255,255,0.6); }
+.sidebar {
+    background: #162033;
+    color: white;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+.logo { font-weight: 800; font-size: 24px; margin-bottom: 22px; }
+.sidebar nav { display: grid; gap: 6px; }
+.sidebar a {
+    padding: 11px 12px;
+    border-radius: 6px;
+    color: #dbe5ef;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.10); color: #fff; }
+.main-content { padding: 28px; min-width: 0; }
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.page-header h1 { margin: 0; font-size: 28px; }
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+}
+.card h3 { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
+.card p { margin: 0; font-size: 30px; font-weight: 800; }
+.panel {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.scanner {
+    min-height: 320px;
+    background: #101828;
+    border-radius: 8px;
+    overflow: hidden;
+    color: white;
+}
+.sidebar.collapsed { transform: translateX(-110%); transition: transform 240ms ease-in-out; }
+.sidebar.open { transform: translateX(0%); transition: transform 240ms ease-in-out; position: fixed; left: 0; top: 0; z-index: 1100; height: 100vh; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1050; }
+.sidebar-overlay.visible { display: block; }
+
+.touch-target, button.touch-target, .button.touch-target { min-height: 44px; min-width: 44px; padding: 10px 12px; }
+
+.hide-desktop { display: none; }
+.show-desktop { display: initial; }
+
+@media (max-width: 900px) {
+    .app-layout { grid-template-columns: 1fr; }
+    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 260px; transform: translateX(-110%); transition: transform 240ms ease-in-out; }
+    .sidebar { padding: 18px; }
+    .stats-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mobile-menu-btn { display: inline-flex; }
+    .hide-mobile { display: none; }
+    .show-mobile { display: initial; }
+    .sidebar-overlay { display: block; }
+}
+@media (max-width: 560px) {
+    .stats-cards { grid-template-columns: 1fr; }
+    .main-content { padding: 18px; }
+}
+
+@media (max-width: 1200px) {
+    .stats-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+    .stats-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+    .stats-cards { grid-template-columns: 1fr; }
+}
+
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 760px) { table { min-width: 680px; } }
+
+@media (max-width: 560px) {
+    input, select, textarea { font-size: 16px; }
+}
+
+.sidebar .logo { font-size: 20px; }
+
+/* Shared modal (used by users.html edit modal and units.js's units/barcode modal) */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 1300; align-items: center; justify-content: center; }
+.modal-overlay.visible { display: flex; }
+.modal-card { background: white; border-radius: 12px; padding: 24px; width: min(92vw, 480px); max-height: 90vh; overflow-y: auto; }
+.modal-card h2 { margin-top: 0; }

@@ -1,0 +1,15 @@
+@import url("admin.css");
+
+.sidebar { background: #1f2937; }
+.department-note {
+    color: var(--muted);
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+    .main-content { padding: 14px; }
+    .department-note { margin-bottom: 16px; }
+}
+
+.department-table .table-wrap { overflow-x: auto; }
