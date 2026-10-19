@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <link rel="stylesheet" href="../css/department.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="bg-im3">
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">IMS</div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-table-columns"></i> Dashboard</a>
+            <a href="my-inventory.html"><i class="fas fa-box"></i> My Inventory</a>
+            <a href="request-inventory.html"><i class="fas fa-plus-circle"></i> Request Inventory</a>
+            <a href="my-requests.html"><i class="fas fa-list"></i> My Requests</a>
+            <a href="reports.html"><i class="fas fa-file-export"></i> Reports</a>
+            <a class="active" href="assistant.html" data-assistant-link><i class="fa-solid fa-robot"></i> Assistant</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="page-header">
+            <h1><i class="fa-solid fa-robot" style="margin-right: 10px; color: var(--accent);"></i> AI Assistant</h1>
+            <button type="button" id="chatClearBtn" class="button secondary"><i class="fa-solid fa-broom"></i> Clear Chat</button>
+        </header>
+        <div id="agentDisabledBanner" class="agent-disabled-banner">
+            <i class="fa-solid fa-triangle-exclamation"></i> Assistant unavailable. Contact an administrator.
+        </div>
+        <section class="panel chat-page">
+            <div id="chatLog" class="chat-log"></div>
+            <form id="chatForm" class="chat-input-row">
+                <textarea id="chatInput" placeholder="Ask about your department's inventory or requests" rows="1" required></textarea>
+                <button type="button" id="chatMicBtn" class="button secondary mic-btn" title="Voice input"><i class="fa-solid fa-microphone"></i></button>
+                <button type="submit" id="chatSendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </section>
+    </main>
+</div>
+<script src="../js/api.js"></script>
+<script src="../js/agent.js"></script>
+</body>
+</html>

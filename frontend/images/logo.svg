@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 100" role="img" aria-labelledby="title desc">
+  <title id="title">Inventory Management System</title>
+  <desc id="desc">A teal inventory box mark followed by the letters IMS.</desc>
+  <rect width="360" height="100" rx="18" fill="#162033"/>
+  <path d="M28 34 55 20l27 14v31L55 79 28 65Z" fill="#0f766e"/>
+  <path d="m55 20 27 14-27 15-27-15Zm0 29v30" fill="none" stroke="#d9fff8" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m55 49 27-15v31L55 79" fill="none" stroke="#d9fff8" stroke-width="5" stroke-linejoin="round"/>
+  <text x="105" y="67" fill="#ffffff" font-family="Georgia,serif" font-size="43" font-weight="700" letter-spacing="2">IMS</text>
+</svg>

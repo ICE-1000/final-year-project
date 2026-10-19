@@ -1,0 +1,78 @@
+### Backend (Java / Maven / Spring Boot) ###
+target/
+**/target/
+*.class
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+
+# Maven
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# Logs
+*.log
+logs/
+spring.log
+
+# Spring Boot
+backend/HELP.md
+
+### Environment / secrets ###
+.env
+.env.*
+!_env.example
+*.pem
+*.key
+
+### IDEs / editors ###
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.code-workspace
+.settings/
+.project
+.classpath
+.factorypath
+*.swp
+*.swo
+*~
+
+### OS files ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+### Frontend ###
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+
+### Build / temp output ###
+*.tmp
+*.bak
+out/
+build/
+dist/
+
+### Database ###
+*.sqlite
+*.sqlite3
+*.db
+/database/*.dump
+/database/*.sql.bak
+
+### Local runtime data (don't commit generated reports/exports) ###
+/backend/uploads/
+*.pdf.tmp
